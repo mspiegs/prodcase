@@ -4,3 +4,18 @@
 require File.expand_path('../config/application', __FILE__)
 
 Prodcase::Application.load_tasks
+
+namespace :loadapi do
+	
+	desc "display desk.com data"
+	task :deskdata do
+		require 'json'
+		website = `curl https://mycaseinc.desk.com/api/v2/cases -u matt@mycaseinc.com:kappasig1 -H 'Accept: application/json'`
+		data = JSON.parse(website)
+
+		data['_embedded']['entries'].each do |line|
+			puts line['blurb']
+		end
+		
+	end
+end
