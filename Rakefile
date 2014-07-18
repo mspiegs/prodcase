@@ -22,9 +22,10 @@ namespace :loadapi do
 
 	task :update_features => :environment do
 		ticket = Ticket.all
+		ticket = ticket.where(read: false)
     feature_ideas = ["time tracking", "billing", "workflow", "Android", "Outlook"]
     ticket.each do |t|
-    	if t.body != nil && t.read != true
+    	if t.body != nil 
 	      feature_ideas.each do |an_idea|
 	        if t.body.include?(an_idea)
 	          f = Feature.find_or_create_by_title(an_idea)
@@ -32,11 +33,11 @@ namespace :loadapi do
 	          f.mentions += 1
 	          # f.tickets += ticket
 	          f.save!
+	          t.read = true
+	          t.save
 	        end
 	      end
 	    end
-	    t.read = true
-	    t.save
     end
 	end
 end
